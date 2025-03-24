@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR" ng-app="temperamentoApp">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>Teste de Temperamento</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    html, body {
+      background-color: #f8f9fa;
+      font-size: 1.1rem;
+      word-wrap: break-word;
+      overflow-x: hidden;
+    }
+    .step { display: none; }
+    .step.active { display: block; }
+    label.form-check-label {
+      cursor: pointer;
+      user-select: none;
+      padding-left: 10px;
+      display: block;
+      white-space: normal;
+    }
+    .form-check {
+      padding: 8px 0;
+      border-bottom: 1px solid #dee2e6;
+    }
+  </style>
+</head>
+<body class="bg-light" ng-controller="TemperamentoCtrl">
+  <div class="container py-4">
+    <div ng-repeat="grupo in grupos" ng-show="etapa === $index + 1" class="step active">
+      <h4 class="mb-3">Passo {{$index + 1}} de {{grupos.length + 1}}</h4>
+      <div class="row">
+        <div class="col-12 col-md-6">
+          <h5>Pontos Fortes</h5>
+          <div class="form-check" ng-repeat="item in grupo.fortes">
+            <input class="form-check-input" type="checkbox" ng-model="item.checked" id="forte{{$index}}{{$parent.$index}}">
+            <label class="form-check-label" for="forte{{$index}}{{$parent.$index}}">{{item.label}}</label>
+          </div>
+        </div>
+        <div class="col-12 col-md-6">
+          <h5>Pontos Fracos</h5>
+          <div class="form-check" ng-repeat="item in grupo.fracos">
+            <input class="form-check-input" type="checkbox" ng-model="item.checked" id="fraco{{$index}}{{$parent.$index}}">
+            <label class="form-check-label" for="fraco{{$index}}{{$parent.$index}}">{{item.label}}</label>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex justify-content-between mt-4">
+        <button class="btn btn-outline-secondary" ng-if="$index > 0" ng-click="etapa--">Anterior</button>
+        <button class="btn btn-primary ms-auto" ng-click="proximo($index)">{{ $index === grupos.length - 1 ? 'Ver Resultado' : 'Próximo' }}</button>
+      </div>
+    </div>
+
+    <div ng-show="etapa === grupos.length + 1">
+      <h3 class="mb-3">Resultado</h3>
+      <div class="alert alert-info">
+        <div ng-repeat="r in resultado">
+          <strong>{{r.valor}}%</strong> {{r.tipo}}
+        </div>
+      </div>
+      <button class="btn btn-secondary mt-3" ng-click="etapa--">Voltar</button>
+    </div>
+  </div>
+
+  <script>
+    angular.module('temperamentoApp', []).controller('TemperamentoCtrl', function ($scope) {
+      $scope.etapa = 1;
+
+      function mapItens(lista) {
+        return lista.map(label => ({ label, checked: false }));
+      }
+
+      $scope.grupos = [
+        {
+          tipo: 'Sanguíneo',
+          fortes: mapItens(["Cordial", "Alegre", "Contagiante", "Bem humorado", "Extrovertido", "Estimulante", "Bondoso", "Emotivo", "Espontâneo", "Ingênuo", "Faz amizade com facilidade", "Tem relacionamento profundo com as pessoas", "Mais coração do que razão", "Relaciona-se bem", "Gosta de crianças", "Esquece facilmente coisas desagradáveis", "Sincero", "Anima as pessoas", "Participa com entusiasmo de novos planos", "Barulhento", "Espalhafatoso", "Curiosidade infantil", "Sensível com necessidades do próximo", "Desperta de bom humor", "Otimista", "Vive para o presente", "Não se sente temeroso pelo futuro", "Não gosta de estar só", "Fala antes de pensar", "Terno e compassivo"]),
+          fracos: mapItens(["Pouco prático e desorganizado", "Age sem pensar", "Tendência a lascívia", "Dificuldade para concentrar-se", "Pouca produtividade", "Indisciplinado", "Começa e não termina seus planos", "Responde e se compromete sem pensar. Não cumpre", "Turbulento", "Não conhece suas limitações", "Não cumpre horários ou compromissos", "Pode alterar seus princípios morais pelo ambiente", "Não é leal", "Egoísta", "Dominador da conversa", "Instável emocionalmente", "Desanima facilmente", "Tem explosões de ira e esquece", "Se arrepende várias vezes pela mesma coisa", "Vontade fraca"])
+        },
+        {
+          tipo: 'Colérico',
+          fortes: mapItens(["Temperamento ardente", "Ativo", "Prático", "Voluntarioso", "Auto suficiente", "Independente", "Decidido", "Facilidade de tomar decisões", "Vibra com muitas atividades", "Pouco influenciado pelo meio", "Influenciador do meio", "Não se amedronta nas adversidades", "Não é dado a detalhes", "Cérebro perspicaz", "Não vacila sob pressão", "Sucesso por determinação e persistência", "Objetivo", "Apresenta sugestões e ideias", "Líder nato", "Insistente", "Intuitivo", "Não liga muito para artes", "Mais razão do que coração", "Extrovertido", "Firme", "Não se abala com críticas", "Auto disciplinado", "Geralmente otimista", "Gosta de desafios", "Se interessa pelo aspecto prático da vida"]),
+          fracos: mapItens(["Insensível", "Irado", "Impetuosidade danosa", "Infringe leis para atingir objetivos", "Sem compaixão cristã", "Indiferente aos anseios dos outros", "Agressivo", "Guarda rancor", "Vingativo", "Tende a ter úlcera", "Cruel", "Mete-se em apuros pela impetuosidade", "Dificilmente pede desculpas", "Declarações cruéis e sarcásticas", "Age tiranicamente sobre sentimentos", "Orgulhoso", "Arrogante", "Dificuldade de concentração espiritual", "Frustra os outros", "Prepotente"])
+        },
+        {
+          tipo: 'Melancólico',
+          fortes: mapItens(["Analítico","Abnegado (desinteressado)","Perfeccionista","Apreciador da arte","Introvertido","É todo coração","Não desaponta os que dependem dele	","Não faz amigos com facilidade","Amigo fiel","Bom diagnosticador de problemas","Pessoa de confiança","Não procura as pessoas. Deixa que elas	o procurem","Consegue prever os obstáculos de um projeto","Tem confiança em sua capacidade","Sensibilidade e talento artísticos","Varia sua disposição de espírito conforme a situação","É correto na profissão","Se sacrifica pessoalmente","Se esquiva de conflitos","Não ocioso","Criativo","Sensível emocionalmente	","Pensador","Revive acontecimentos e decisões passadas","Cumpridor de suas responsabilidades","Evita ficar em evidência","Reservado quanto a expor suas idéias","Fala pouco, mas é muito preciso no que diz","Não se compromete a fazer mais do que pode","Introspectivo"]),
+          fracos: mapItens(["Egocêntrico", "Autoanálise complacente", "Interesse excessivo pela saúde", "Desejos de vingança", "Hipocondríaco", "Se ofende facilmente", "Desconfiado", "Suposições desfavoráveis", "Dificilmente perdoa", "Autocomiseração", "Pessimista", "Inseguro", "Temeroso", "Crítico inflexível", "Depressivo", "Entra em devaneio", "Mau humorado", "Se deixa levar por estados mentais mórbidos", "Acha que conspiram contra ele", "Tudo é capital para ele"])
+        },
+        {
+          tipo: 'Fleumático',
+          fortes: mapItens(["Calmo", "Frio", "Bem equilibrado", "É todo razão", "Controla emoções", "Racional", "Raramente explode", "Aprecia artes", "Gosto refinado", "Controlado", "Gosta de convívio social", "Despreocupado com circunstâncias", "Sente mais do que demonstra", "Prático e eficiente", "Senso de humor mordaz", "Provoca risos sem rir", "Cérebro organizado", "Trabalha bem sob tensão", "Pouco envolvimento com os outros", "Vida regrada", "Tende à rotina", "Observador das circunstâncias", "Metódico", "Bom coração, mas discreto", "Capaz", "Cumpre obrigações e horários", "Conciliador", "Pacificador nato", "Sabe ouvir com paciência", "Bom conselheiro"]),
+          fracos: mapItens(["Moroso", "Indolente", "Sem motivação", "Provocador", "Gélido", "Obstinado", "Egoísta", "Indeciso", "Resistente", "Avarento", "Descompromissado", "Mais vagaroso quando forçado", "Espectador da vida", "Acomodado", "Usa mau humor contra os outros", "Conservador por comodismo", "Disfarça obstinação com humor", "Não se envolve", "Vacila entre agir e não agir", "Procrastinador"])
+        }
+      ];
+
+    $scope.proximo = function(index) {
+        if (index === $scope.grupos.length - 1) {
+          $scope.calcularResultado();
+        }
+        $scope.etapa++;
+      };
+
+      $scope.voltar = function(index) {
+        $scope.etapa--;
+      };
+      $scope.calcularResultado = function() {
+        const resultados = $scope.grupos.map(grupo => {
+          const total = grupo.fortes.concat(grupo.fracos);
+          const marcados = total.filter(i => i.checked).length;
+          return { tipo: grupo.tipo, count: marcados };
+        });
+
+        const totalMarcado = resultados.reduce((sum, g) => sum + g.count, 0);
+        resultados.forEach(r => {
+          r.valor = totalMarcado > 0 ? ((r.count / totalMarcado) * 100).toFixed(1) : '0.0';
+        });
+
+        $scope.resultado = resultados.sort((a, b) => b.valor - a.valor);
+      };
+    });
+  </script>
+</body>
+
+</html>
