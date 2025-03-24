@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR" ng-app="temperamentoApp">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -7,14 +8,22 @@
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    html, body {
+    html,
+    body {
       background-color: #f8f9fa;
       font-size: 1.1rem;
       word-wrap: break-word;
       overflow-x: hidden;
     }
-    .step { display: none; }
-    .step.active { display: block; }
+
+    .step {
+      display: none;
+    }
+
+    .step.active {
+      display: block;
+    }
+
     label.form-check-label {
       cursor: pointer;
       user-select: none;
@@ -22,12 +31,14 @@
       display: block;
       white-space: normal;
     }
+
     .form-check {
       padding: 8px 0;
       border-bottom: 1px solid #dee2e6;
     }
   </style>
 </head>
+
 <body class="bg-light" ng-controller="TemperamentoCtrl">
   <div class="container py-4">
     <div ng-repeat="grupo in grupos" ng-show="etapa === $index + 1" class="step active">
@@ -36,21 +47,24 @@
         <div class="col-12 col-md-6">
           <h5>Pontos Fortes</h5>
           <div class="form-check" ng-repeat="item in grupo.fortes">
-            <input class="form-check-input" type="checkbox" ng-model="item.checked" id="forte{{$index}}{{$parent.$index}}">
+            <input class="form-check-input" type="checkbox" ng-model="item.checked"
+              id="forte{{$index}}{{$parent.$index}}">
             <label class="form-check-label" for="forte{{$index}}{{$parent.$index}}">{{item.label}}</label>
           </div>
         </div>
         <div class="col-12 col-md-6">
           <h5>Pontos Fracos</h5>
           <div class="form-check" ng-repeat="item in grupo.fracos">
-            <input class="form-check-input" type="checkbox" ng-model="item.checked" id="fraco{{$index}}{{$parent.$index}}">
+            <input class="form-check-input" type="checkbox" ng-model="item.checked"
+              id="fraco{{$index}}{{$parent.$index}}">
             <label class="form-check-label" for="fraco{{$index}}{{$parent.$index}}">{{item.label}}</label>
           </div>
         </div>
       </div>
       <div class="d-flex justify-content-between mt-4">
         <button class="btn btn-outline-secondary" ng-if="$index > 0" ng-click="etapa--">Anterior</button>
-        <button class="btn btn-primary ms-auto" ng-click="proximo($index)">{{ $index === grupos.length - 1 ? 'Ver Resultado' : 'Próximo' }}</button>
+        <button class="btn btn-primary ms-auto" ng-click="proximo($index)">{{ $index === grupos.length - 1 ? 'Ver
+          Resultado' : 'Próximo' }}</button>
       </div>
     </div>
 
@@ -86,7 +100,7 @@
         },
         {
           tipo: 'Melancólico',
-          fortes: mapItens(["Analítico","Abnegado (desinteressado)","Perfeccionista","Apreciador da arte","Introvertido","É todo coração","Não desaponta os que dependem dele	","Não faz amigos com facilidade","Amigo fiel","Bom diagnosticador de problemas","Pessoa de confiança","Não procura as pessoas. Deixa que elas	o procurem","Consegue prever os obstáculos de um projeto","Tem confiança em sua capacidade","Sensibilidade e talento artísticos","Varia sua disposição de espírito conforme a situação","É correto na profissão","Se sacrifica pessoalmente","Se esquiva de conflitos","Não ocioso","Criativo","Sensível emocionalmente	","Pensador","Revive acontecimentos e decisões passadas","Cumpridor de suas responsabilidades","Evita ficar em evidência","Reservado quanto a expor suas idéias","Fala pouco, mas é muito preciso no que diz","Não se compromete a fazer mais do que pode","Introspectivo"]),
+          fortes: mapItens(["Analítico", "Abnegado (desinteressado)", "Perfeccionista", "Apreciador da arte", "Introvertido", "É todo coração", "Não desaponta os que dependem dele	", "Não faz amigos com facilidade", "Amigo fiel", "Bom diagnosticador de problemas", "Pessoa de confiança", "Não procura as pessoas. Deixa que elas	o procurem", "Consegue prever os obstáculos de um projeto", "Tem confiança em sua capacidade", "Sensibilidade e talento artísticos", "Varia sua disposição de espírito conforme a situação", "É correto na profissão", "Se sacrifica pessoalmente", "Se esquiva de conflitos", "Não ocioso", "Criativo", "Sensível emocionalmente	", "Pensador", "Revive acontecimentos e decisões passadas", "Cumpridor de suas responsabilidades", "Evita ficar em evidência", "Reservado quanto a expor suas idéias", "Fala pouco, mas é muito preciso no que diz", "Não se compromete a fazer mais do que pode", "Introspectivo"]),
           fracos: mapItens(["Egocêntrico", "Autoanálise complacente", "Interesse excessivo pela saúde", "Desejos de vingança", "Hipocondríaco", "Se ofende facilmente", "Desconfiado", "Suposições desfavoráveis", "Dificilmente perdoa", "Autocomiseração", "Pessimista", "Inseguro", "Temeroso", "Crítico inflexível", "Depressivo", "Entra em devaneio", "Mau humorado", "Se deixa levar por estados mentais mórbidos", "Acha que conspiram contra ele", "Tudo é capital para ele"])
         },
         {
@@ -96,17 +110,23 @@
         }
       ];
 
-    $scope.proximo = function(index) {
+      $scope.scrollToTop = function () {
+        $timeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+      };
+
+      $scope.proximo = function (index) {
         if (index === $scope.grupos.length - 1) {
           $scope.calcularResultado();
         }
         $scope.etapa++;
+        $scope.scrollToTop();
       };
 
-      $scope.voltar = function(index) {
+      $scope.voltar = function (index) {
         $scope.etapa--;
+        $scope.scrollToTop();
       };
-      $scope.calcularResultado = function() {
+      $scope.calcularResultado = function () {
         const resultados = $scope.grupos.map(grupo => {
           const total = grupo.fortes.concat(grupo.fracos);
           const marcados = total.filter(i => i.checked).length;
