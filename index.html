@@ -62,7 +62,7 @@
         </div>
       </div>
       <div class="d-flex justify-content-between mt-4">
-        <button class="btn btn-outline-secondary" ng-if="$index > 0" ng-click="etapa--">Anterior</button>
+        <button class="btn btn-outline-secondary" ng-if="$index > 0" ng-click="voltar()">Anterior</button>
         <button class="btn btn-primary ms-auto" ng-click="proximo($index)">{{ $index === grupos.length - 1 ? 'Ver
           Resultado' : 'Próximo' }}</button>
       </div>
@@ -75,7 +75,7 @@
           <strong>{{r.valor}}%</strong> {{r.tipo}}
         </div>
       </div>
-      <button class="btn btn-secondary mt-3" ng-click="etapa--">Voltar</button>
+      <button class="btn btn-secondary mt-3" ng-click="voltar()">Voltar</button>
     </div>
   </div>
 
